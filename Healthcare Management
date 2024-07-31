@@ -1,0 +1,93 @@
+--TABLE OVERVIEW
+SELECT * FROM healthcare_dataset$
+
+--MEDICAL CONDITION FOR EACH AGE GROUP
+SELECT Gender,[Medical Condition],
+CASE WHEN Age  BETWEEN 0 AND 14 THEN 'CHILDREN'
+WHEN  Age BETWEEN 15 AND 19 THEN 'TEENEGERS'
+WHEN Age BETWEEN 20 AND 24 THEN 'YOUNG ADULTS' 
+WHEN Age BETWEEN 25 AND 64 THEN 'ADULTS'
+ELSE 'ELDERLY' END AS 'AGE GROUP'  
+FROM healthcare_dataset$
+GROUP BY [Medical Condition], Gender
+
+--WHAT IS THE DISTRIUTION OF MEDICAL CONDITION AMONG DIFFERENT AGE GROUP
+SELECT [Medical Condition],
+CASE WHEN Age  BETWEEN 0 AND 14 THEN 'Children'
+WHEN  Age BETWEEN 15 AND 19 THEN 'Teenegers'
+WHEN Age BETWEEN 20 AND 24 THEN 'Young Adults' 
+WHEN Age BETWEEN 25 AND 64 THEN 'Adults'
+ELSE 'Elderly' END AS 'Age Group',
+COUNT([Medical Condition]) AS [Patient Count] FROM healthcare_dataset$
+GROUP BY [Medical Condition],
+CASE WHEN Age  BETWEEN 0 AND 14 THEN 'Children'
+WHEN  Age BETWEEN 15 AND 19 THEN 'Teenegers'
+WHEN Age BETWEEN 20 AND 24 THEN 'Young Adults' 
+WHEN Age BETWEEN 25 AND 64 THEN 'Adults'
+ELSE 'Elderly' END
+
+--WHAT IS AVERAGE LENGTH OF STAY FOR EACH MEDICAL CONDITION?
+
+SELECT [Gender], [Medical Condition],AVG(DATEDIFF(DAY,[Date of Admission],[Discharge Date]))
+AS [Average Days Of Stay] FROM healthcare_dataset$
+GROUP BY Gender, [Medical Condition]
+
+SELECT [Gender], [Medical Condition],Hospital,(DATEDIFF(DAY,[Date of Admission],[Discharge Date]))
+AS [Days Of STay] FROM healthcare_dataset$
+GROUP BY Gender, [Medical Condition],Hospital,(DATEDIFF(DAY,[Date of Admission],[Discharge Date]))
+ORDER BY [Days Of STay] DESC
+
+--HOW MANY PATIENT WERE ADMITTED ON AN EMMERGENCY BASIS COMPARED TO ELECTIVE OR URGENT ADMISSION
+
+SELECT [Admission Type], COUNT([Admission Type]) AS [Admitted Patient] FROM healthcare_dataset$
+GROUP BY [Admission Type]
+
+ --What are the most common medications prescribed for each medical condition?
+
+ SELECT [Medical Condition],Medication,COUNT (Medication) AS [Common Medication] FROM healthcare_dataset$
+ GROUP BY [Medical Condition],Medication
+ ORDER BY [Common Medication] DESC
+
+ --What is the distribution of test results for different medical conditions?
+ 
+ SELECT [Medical Condition],[Test Results], COUNT([Test Results]) AS [Test Results Count] FROM healthcare_dataset$
+ GROUP BY [Medical Condition],[Test Results]
+ ORDER BY [Test Results Count] DESC
+
+ --Which hospitals have the highest average billing amounts?
+ SELECT Hospital, AVG([Billing Amount]) AS [Average Billing Amount] FROM healthcare_dataset$
+ GROUP BY Hospital
+ ORDER BY [Average Billing Amount] DESC
+
+ --How does the average billing amount vary by gender and medical condition?
+ SELECT Gender,[Medical Condition], AVG([Billing Amount]) AS [Average Billing Amount] FROM healthcare_dataset$
+ GROUP BY Gender,[Medical Condition]
+ ORDER BY [Average Billing Amount] DESC
+
+ --What is the distribution of patients by blood type?
+
+ SELECT [Blood Type], COUNT([Blood Type]) AS [Number Of Patient] FROM healthcare_dataset$
+ GROUP BY [Blood Type]
+ ORDER BY [Number Of Patient] DESC
+
+--What is the total billing amount for each insurance provider?
+SELECT [Insurance Provider],SUM([Billing Amount]) AS [Total Billing Amount]FROM healthcare_dataset$
+GROUP BY [Insurance Provider]
+ORDER BY [Total Billing Amount] DESC
+  
+--How many patients have inconclusive test results for each medical condition?
+SELECT [Medical Condition],[Test Results],COUNT([Test Results]) AS [Number Of Test Results] FROM healthcare_dataset$
+WHERE [Test Results]='inconclusive'
+GROUP BY [Test Results],[Medical Condition]
+ORDER BY [Number Of Test Results] DESC
+
+
+
+
+
+
+
+
+
+
+
